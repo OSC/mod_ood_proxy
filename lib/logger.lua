@@ -1,4 +1,4 @@
-local JSON = require 'ood.json'
+local JSON = require "ood.json"
 
 --[[
   logger
@@ -8,17 +8,17 @@ local JSON = require 'ood.json'
 --]]
 function logger(r)
   -- read in variables set previously in the request by mod_ood_proxy
-  local user              = r.subprocess_env['MAPPED_USER'] -- set by the user mapping code
-  local time_user_map     = r.subprocess_env['OOD_TIME_USER_MAP'] -- set by the user mapping code
-  local time_begin_proxy  = r.subprocess_env['OOD_TIME_BEGIN_PROXY'] -- set by the proxy code
+  local user              = r.subprocess_env["MAPPED_USER"] -- set by the user mapping code
+  local time_user_map     = r.subprocess_env["OOD_TIME_USER_MAP"] -- set by the user mapping code
+  local time_begin_proxy  = r.subprocess_env["OOD_TIME_BEGIN_PROXY"] -- set by the proxy code
 
   -- only log authenticated users
   if user then
-    local msg  = {}
     local time = r:clock()
+    local msg  = {}
 
     -- log
-    msg["timestamp"] = os.date('!%Y-%m-%dT%T', time / 1000000) .. '.' .. time % 1000000 .. 'Z'
+    msg["timestamp"] = os.date("!%Y-%m-%dT%T", time / 1000000) .. "." .. time % 1000000 .. "Z"
     msg["log_id"]    = r.log_id
 
     -- user
@@ -27,26 +27,27 @@ function logger(r)
 
     -- session
     msg["user_ip"]       = r.useragent_ip
-    msg["user_agent"]    = r.headers_in['User-Agent'] or ''
-    msg["user_accept"]   = (r.headers_in['Accept'] or ''):lower()
-    msg["user_encoding"] = (r.headers_in['Accept-Encoding'] or ''):lower()
-    msg["user_lang"]     = (r.headers_in['Accept-Language'] or ''):lower()
+    msg["user_agent"]    = r.headers_in["User-Agent"] or ""
+    msg["user_accept"]   = (r.headers_in["Accept"] or ""):lower()
+    msg["user_encoding"] = (r.headers_in["Accept-Encoding"] or ""):lower()
+    msg["user_lang"]     = (r.headers_in["Accept-Language"] or ""):lower()
 
     -- request
     msg["req_method"]    = r.method
     msg["req_status"]    = r.status
     msg["req_path"]      = r.uri
-    msg["req_https"]     = r.is_https and 'true' or 'false'
+    msg["req_https"]     = r.is_https and true or false
+    msg["req_websocket"] = r.headers_in["Upgrade"] and true or false
     msg["req_host"]      = r.hostname
     msg["req_port"]      = r.port
     msg["req_server"]    = r.server_name
-    msg["req_referer"]   = (r.headers_in['Referer'] or ''):match('^([^?]*)')
+    msg["req_referer"]   = (r.headers_in["Referer"] or ""):match("^([^?]*)")
 
     -- response
-    msg["res_encoding"]  = (r.headers_out['Content-Encoding'] or ''):lower()
-    msg["res_length"]    = (r.headers_out['Content-Length'] or '')
-    msg["res_type"]      = (r.headers_out['Content-Type'] or ''):lower()
-    msg["res_disp"]      = (r.headers_out['Content-Disposition'] or '')
+    msg["res_encoding"]  = (r.headers_out["Content-Encoding"] or ""):lower()
+    msg["res_length"]    = (r.headers_out["Content-Length"] or "")
+    msg["res_type"]      = (r.headers_out["Content-Type"] or ""):lower()
+    msg["res_disp"]      = (r.headers_out["Content-Disposition"] or "")
 
     -- benchmarks
     msg["time_proxy"]    = time_begin_proxy and (r:clock() - time_begin_proxy)/1000.0 or 0
