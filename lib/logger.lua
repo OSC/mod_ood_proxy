@@ -48,6 +48,7 @@ function logger(r)
     msg["res_length"]    = (r.headers_out["Content-Length"] or "")
     msg["res_type"]      = (r.headers_out["Content-Type"] or ""):lower()
     msg["res_disp"]      = (r.headers_out["Content-Disposition"] or "")
+    msg["res_location"]  = (r.headers_out["Location"] or "")
 
     -- benchmarks
     msg["time_proxy"]    = time_begin_proxy and (r:clock() - time_begin_proxy)/1000.0 or 0
