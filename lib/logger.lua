@@ -23,30 +23,39 @@ function logger(r)
     msg["local_user"]  = user
     msg["remote_user"] = r.user
 
-    -- session
-    msg["user_ip"]       = r.useragent_ip
-    msg["user_agent"]    = r.headers_in["User-Agent"] or ""
-    msg["user_accept"]   = (r.headers_in["Accept"] or ""):lower()
-    msg["user_encoding"] = (r.headers_in["Accept-Encoding"] or ""):lower()
-    msg["user_lang"]     = (r.headers_in["Accept-Language"] or ""):lower()
-
     -- request
-    msg["req_method"]    = r.method
-    msg["req_status"]    = r.status
-    msg["req_path"]      = r.uri
-    msg["req_https"]     = r.is_https and true or false
-    msg["req_websocket"] = r.headers_in["Upgrade"] and true or false
-    msg["req_host"]      = r.hostname
-    msg["req_port"]      = r.port
-    msg["req_server"]    = r.server_name
-    msg["req_referer"]   = (r.headers_in["Referer"] or ""):match("^([^?]*)")
+    msg["req_user_ip"]      = r.useragent_ip
+    msg["req_method"]       = r.method
+    msg["req_status"]       = r.status
+    msg["req_uri"]          = r.uri
+    msg["req_protocol"]     = r.protocol
+    msg["req_hostname"]     = r.hostname
+    msg["req_port"]         = r.port
+    msg["req_server_name"]  = r.server_name
+    msg["req_handler"]      = r.handler
+    msg["req_filename"]     = r.filename
+    msg["req_is_https"]     = r.is_https and true or false
+    msg["req_is_websocket"] = r.headers_in["Upgrade"] and true or false
 
-    -- response
-    msg["res_encoding"]  = (r.headers_out["Content-Encoding"] or ""):lower()
-    msg["res_length"]    = (r.headers_out["Content-Length"] or "")
-    msg["res_type"]      = (r.headers_out["Content-Type"] or ""):lower()
-    msg["res_disp"]      = (r.headers_out["Content-Disposition"] or "")
-    msg["res_location"]  = (r.headers_out["Location"] or "")
+    -- request headers
+    msg["req_referer"]         = (r.headers_in["Referer"] or ""):match("^([^?]*)")
+    msg["req_user_agent"]      = (r.headers_in["User-Agent"] or "")
+    msg["req_accept"]          = (r.headers_in["Accept"] or ""):lower()
+    msg["req_accept_charset"]  = (r.headers_in["Accept-Charset"] or ""):lower()
+    msg["req_accept_encoding"] = (r.headers_in["Accept-Encoding"] or ""):lower()
+    msg["req_accept_language"] = (r.headers_in["Accept-Language"] or ""):lower()
+    msg["req_cache_control"]   = (r.headers_in["Cache-Control"] or ""):lower()
+    msg["req_content_type"]    = (r.headers_in["Content-Type"] or ""):lower()
+    msg["req_origin"]          = (r.headers_in["Origin"] or "")
+
+    -- response headers
+    msg["res_content_encoding"] = (r.headers_out["Content-Encoding"] or ""):lower()
+    msg["res_content_length"]   = (r.headers_out["Content-Length"] or "")
+    msg["res_content_type"]     = (r.headers_out["Content-Type"] or ""):lower()
+    msg["res_content_disp"]     = (r.headers_out["Content-Disposition"] or "")
+    msg["res_content_location"] = (r.headers_out["Content-Location"] or "")
+    msg["res_content_language"] = (r.headers_out["Content-Language"] or "")
+    msg["res_location"]         = (r.headers_out["Location"] or "")
 
     -- benchmarks
     msg["time_proxy"]    = time_begin_proxy and (r:clock() - time_begin_proxy)/1000.0 or 0
