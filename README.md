@@ -1,3 +1,5 @@
+## Moved to https://github.com/OSC/ondemand/tree/master/mod_ood_proxy
+
 # mod_ood_proxy
 
 ![GitHub Release](https://img.shields.io/github/release/osc/mod_ood_proxy.svg)
